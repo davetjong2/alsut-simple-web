@@ -15,43 +15,6 @@
 
     <div class="flex gap-10 w-full">
 
-        {{-- LEFT SIDE: PHOTO --}}
-        <div class="w-1/3 flex flex-col items-center">
-            <div class="mb-4">
-                <img 
-                    class="h-40 w-40 rounded-full object-cover" 
-                    src="{{ $user->profile_picture_url }}" 
-                    alt="{{ $user->name }}"
-                >
-            </div>
-
-            <div class="inline-flex gap-2 text-sm font-medium">
-                <button
-                    type="button"
-                    @click="editingPhoto = true"
-                    class="text-blue-600 hover:underline"
-                >
-                    {{ $user->profile_picture ? 'Edit' : 'Upload' }}
-                </button>
-
-                @if ($user->profile_picture)
-                    <span class="text-gray-400">|</span>
-
-                    <form method="POST" action="{{ route('profile.picture.delete') }}">
-                        @csrf
-                        @method('DELETE')
-                        <button 
-                            type="submit"
-                            class="text-red-600 hover:underline"
-                            onclick="return confirm('Delete profile picture?')"
-                        >
-                            Delete
-                        </button>
-                    </form>
-                @endif
-            </div>
-        </div>
-
         {{-- RIGHT SIDE: PROFILE FORM --}}
         <div class="w-2/3">
             <form 
@@ -89,7 +52,7 @@
                     <x-input-error :messages="$errors->get('email')" />
                 </div>
 
-                <div class="flex justify-end">
+                <div class="flex">
                     <x-primary-button class="w-auto px-6">
                         Save
                     </x-primary-button>
@@ -150,6 +113,43 @@
                     </div>
                 </div>
             </form>
+        </div>
+
+        {{-- LEFT SIDE: PHOTO --}}
+        <div class="w-1/3 flex flex-col items-center">
+            <div class="mb-4">
+                <img 
+                    class="h-40 w-40 rounded-full object-cover" 
+                    src="{{ $user->profile_picture_url }}" 
+                    alt="{{ $user->name }}"
+                >
+            </div>
+
+            <div class="inline-flex gap-2 text-sm font-medium">
+                <button
+                    type="button"
+                    @click="editingPhoto = true"
+                    class="text-blue-600 hover:underline"
+                >
+                    {{ $user->profile_picture ? 'Edit' : 'Upload' }}
+                </button>
+
+                @if ($user->profile_picture)
+                    <span class="text-gray-400">|</span>
+
+                    <form method="POST" action="{{ route('profile.picture.delete') }}">
+                        @csrf
+                        @method('DELETE')
+                        <button 
+                            type="submit"
+                            class="text-red-600 hover:underline"
+                            onclick="return confirm('Delete profile picture?')"
+                        >
+                            Delete
+                        </button>
+                    </form>
+                @endif
+            </div>
         </div>
     </div>
 </section>
