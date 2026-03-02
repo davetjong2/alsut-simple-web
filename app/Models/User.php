@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile_picture',
     ];
 
     /**
@@ -45,4 +46,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+// get profile picture url
+    public function getProfilePictureUrlAttribute(): ?string
+    {
+        if (! $this->profile_picture) {
+            return asset('images/default-avatar.jpg');;
+        }
+
+        return \Illuminate\Support\Facades\Storage::url($this->profile_picture);
+    }
 }
+

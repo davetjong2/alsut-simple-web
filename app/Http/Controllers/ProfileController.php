@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -30,6 +31,19 @@ class ProfileController extends Controller
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
+        }
+
+        // Profile picture upload logic
+        if($request->hasFile(('profile_picture'))){
+            $path = $request->file('profile_picture')
+                ->store('profile_pictures', 'public');
+
+            // if already use profile picture, delete
+            if($request->user()->profile_picture){
+                Storage::disk('public')->delete($request->user()->profile_picture);
+            }
+            
+            $request->user()->update(['profile_picture' => $path]);
         }
 
         $request->user()->save();
@@ -56,5 +70,17 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    public function deletePicture(Request $request){
+        $user = $request->user();
+
+        if($user->profile_picture){
+            Storage::disk('public')->delete($user->profile_picture);
+            $user->update(['profile_picture' => null]);
+        }
+
+        // always redirect to profile edit so tests and users land correctly
+        return Redirect::route('profile.edit')->with('status', 'profile-picture-deleted');
     }
 }
