@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -22,6 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'profile_picture',
+        'coin',
     ];
 
     /**
@@ -55,6 +57,22 @@ class User extends Authenticatable
         }
 
         return \Illuminate\Support\Facades\Storage::url($this->profile_picture);
+    }
+
+    public function sawitPlants():HasMany
+    {
+        return $this->hasMany((SawitPlant::class));
+    }
+
+    public function sawitTransactions(): HasMany
+    {
+        return $this->hasMany(SawitTransaction::class);
+    }
+
+    // legacy alias
+    public function sawitPlantHistories():HasMany
+    {
+        return $this->sawitTransactions();
     }
 }
 
